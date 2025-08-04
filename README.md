@@ -14,12 +14,12 @@ npm install
 npm start
 
 
-🚀 InterviewAI
+🚀 InterviewAI : 
 Your intelligent interview companion, built to challenge and empower you—before the recruiter does.
 
 InterviewAI is a sleek, AI-powered app that simulates timed interview assessments tailored to each user’s profile. Upload your resume, enter your skills and experience, and let GPT generate 20 custom multiple-choice questions—all ready to go in under 20 minutes. Your personal dashboard breaks down performance with actionable insights: know your weak spots, celebrate your strengths, and ace your next real interview.
 
-🔥 Features
+🔥 Features :
 📄 Resume-driven question generation Upload your resume and InterviewAI extracts relevant domains and topics.
 
 🤖 GPT-Powered Interview Engine Leveraging GPT to craft 20 custom MCQs based on your profile, skills, and experience.
