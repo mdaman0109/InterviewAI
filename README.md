@@ -1,7 +1,6 @@
 
 
 📦 Installation
-bash
 # Clone the repo
 git clone https://github.com/mdaman0109/InterviewAI.git
 
