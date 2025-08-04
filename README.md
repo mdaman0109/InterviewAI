@@ -1,12 +1,34 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+📦 Installation
+bash
+# Clone the repo
+git clone https://github.com/mdaman0109/InterviewAI.git
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Navigate into the project
+cd InterviewAI
 
-## Expanding the ESLint configuration
+# Install dependencies
+npm install
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Start development server
+npm start
+
+
+🚀 InterviewAI
+Your intelligent interview companion, built to challenge and empower you—before the recruiter does.
+
+InterviewAI is a sleek, AI-powered app that simulates timed interview assessments tailored to each user’s profile. Upload your resume, enter your skills and experience, and let GPT generate 20 custom multiple-choice questions—all ready to go in under 20 minutes. Your personal dashboard breaks down performance with actionable insights: know your weak spots, celebrate your strengths, and ace your next real interview.
+
+🔥 Features
+📄 Resume-driven question generation Upload your resume and InterviewAI extracts relevant domains and topics.
+
+🤖 GPT-Powered Interview Engine Leveraging GPT to craft 20 custom MCQs based on your profile, skills, and experience.
+
+⏱️ Timed Assessment (20 minutes) Feel the pressure like a real interview—with a crisp 20-minute countdown.
+
+📊 Performance Dashboard See your results instantly with categorized feedback:
+
+See your results instantly with categorized feedback on overall performance, personalized suggestions, and AI-driven insights to help you level up your skills.
+
+🎯 Skill-focused training Helps users prepare with personalized practice suggestions.
