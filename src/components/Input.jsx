@@ -1,5 +1,28 @@
-// Input.jsx
+import { useUser } from "../context/userContext";
+import { useState } from "react";
 const Input = () => {
+  const { setUser } = useUser();
+
+  const [name, setName] = useState("");
+  const [skills, setSkills] = useState("");
+  const [experience, setExperience] = useState("");
+  const [resume, setResume] = useState(null);
+
+    const handleSubmit = () => {
+    setUser({
+        username: name,
+        skills: skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0),
+        experience: Number(experience),
+        resumeFile: resume,
+    });
+    };
+
+
+
+
   return (
     <div className="bg-gradient-to-br from-slate-900 to-slate-800 pt-20 p-8 font-sans">
       <header className="text-center">
@@ -19,18 +42,24 @@ const Input = () => {
 
           <input
             type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600"
             placeholder="Your Name"
           />
 
           <input
             type="text"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600"
             placeholder="Skills (comma separated)"
           />
 
           <input
             type="number"
+            value={experience}
+            onChange={(e) => setExperience(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600"
             placeholder="Years of Experience"
             min="0"
@@ -43,6 +72,7 @@ const Input = () => {
             <input
               id="resume"
               type="file"
+              onChange={(e) => setResume(e.target.files[0])}
               className="w-full cursor-pointer text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 
                          file:text-sm file:font-semibold file:bg-teal-600 file:text-white hover:file:bg-teal-700"
               accept=".pdf,.doc,.docx"
@@ -50,6 +80,7 @@ const Input = () => {
           </div>
 
           <button
+            onClick={handleSubmit}
             className="w-full mt-4 cursor-pointer bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-md shadow-md transition-all duration-300"
           >
             Submit
