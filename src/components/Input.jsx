@@ -1,11 +1,12 @@
 import { useUser } from "../context/userContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 const Input = () => {
   const navigate = useNavigate();
   const { setUser } = useUser();
-
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [skills, setSkills] = useState("");
   const [experience, setExperience] = useState("");
@@ -21,8 +22,15 @@ const Input = () => {
       experience: Number(experience),
       resumeFile: resume,
     });
+    setLoading(true)
     navigate("/generate");
   };
+
+  if (loading) {
+    return (
+      <Loading/>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-br from-slate-900 to-slate-800 pt-16 pb-20 font-sans px-4 sm:px-6">
