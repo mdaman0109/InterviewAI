@@ -13,6 +13,7 @@ const Input = () => {
   const [resume, setResume] = useState(null);
 
   const handleSubmit = () => {
+    setLoading(true)
     setUser({
       username: name,
       skills: skills
@@ -22,7 +23,7 @@ const Input = () => {
       experience: Number(experience),
       resumeFile: resume,
     });
-    setLoading(true)
+    
     navigate("/generate");
   };
 
@@ -44,7 +45,7 @@ const Input = () => {
       </header>
 
       <main className="flex justify-center pt-8">
-        <div className="bg-slate-700 rounded-xl shadow-xl p-6 sm:p-10 w-full max-w-md text-white space-y-6">
+        <div className="bg-slate-700 rounded-xl shadow-sm shadow-gray-200 p-6 sm:p-10 w-full max-w-md text-white space-y-6">
           <h2 className="text-xl sm:text-2xl font-semibold text-center text-teal-200">
             Enter details to start
           </h2>
