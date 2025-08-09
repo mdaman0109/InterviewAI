@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Submitting from "./Submitting";
+import { useUser } from "../context/userContext";
 import SubmitSuccess from "./SubmitSucess";
 import Error from "./Error";
 import Loading from "./Loading";
@@ -16,7 +17,7 @@ const QuestionGenerator = ({ skills }) => {
   const [submitted, setSubmitted] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [userAnswers, setUserAnswers] = useState({});
-
+  const {user}=useUser()
   const handleSubmit = () => {
     setSubmitting(true);
     setTimeout(() => {
@@ -51,7 +52,7 @@ const QuestionGenerator = ({ skills }) => {
       const combinedSkills = skills.join(", ");
       const prompt = `
 You are a question generation engine.
-Generate exactly 30 multiple-choice questions (MCQs) that test knowledge of the following skills: ${combinedSkills}.
+Generate exactly 30 multiple-choice questions (MCQs) of total year of experience ${user.experience}that test knowledge of the following skills: ${combinedSkills}.
 Only include Hard and very Hard level questions.
 Each question must have:
 - "question": The question string
@@ -109,7 +110,7 @@ Return the response as a valid JSON array of exactly 30 objects.
 
  
   if (error) {
-  return (<Error/>
+  return (<Error error={error}/>
   );
 }
 
