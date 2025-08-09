@@ -38,7 +38,7 @@ ${text}
 
     return skills; 
   } catch (err) {
-    console.error("AI skill extraction failed, using fallback:", err);
+    console.error("AI skill extraction failed:", err);
     const { user, setUser } = useUser();
      setUser((prev) => ({
     ...prev,

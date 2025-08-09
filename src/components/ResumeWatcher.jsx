@@ -25,7 +25,7 @@ const ResumeWatcher = () => {
           skills: combinedSkills,
         }));
 
-        setFinalSkills(combinedSkills); // Pass this to QuestionGenerator
+        setFinalSkills(combinedSkills); 
         console.log("✅ combined:", combinedSkills);
       } catch (error) {
         console.error("Resume analysis failed:", error);
