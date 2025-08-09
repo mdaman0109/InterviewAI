@@ -8,12 +8,14 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/generate" element={<QuestionGenerator />} />
-        </Routes>
+        <>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/quiz" element={<QuestionGenerator />} />
+          </Routes>
+          <ResumeWatcher />
+        </>
       </Router>
-      <ResumeWatcher />
     </UserProvider>
   );
 }

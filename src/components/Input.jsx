@@ -12,8 +12,36 @@ const Input = () => {
   const [experience, setExperience] = useState("");
   const [resume, setResume] = useState(null);
 
+  const [errors, setErrors] = useState({
+    experience: "",
+    resume: "",
+  });
+
   const handleSubmit = () => {
-    setLoading(true)
+    
+    const newErrors = {
+      experience: "",
+      resume: "",
+    };
+
+    if (!experience.trim()) {
+      newErrors.experience = "⚠️ Year of Experience is required.";
+    }
+
+    if (!resume) {
+      newErrors.resume = "⚠️ Please upload your resume.";
+    } else if (resume.type !== "application/pdf") {
+      newErrors.resume = "⚠️ Only PDF files are allowed.";
+    }
+
+    if (Object.values(newErrors).some((msg) => msg)) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setLoading(true);
+
     setUser({
       username: name,
       skills: skills
@@ -23,14 +51,12 @@ const Input = () => {
       experience: Number(experience),
       resumeFile: resume,
     });
-    
-    navigate("/generate");
+
+    navigate("/quiz");
   };
 
   if (loading) {
-    return (
-      <Loading/>
-    );
+    return <Loading />;
   }
 
   return (
@@ -55,7 +81,7 @@ const Input = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600 text-sm sm:text-base"
-            placeholder="Your Name*"
+            placeholder="Your Name"
           />
 
           <input
@@ -71,22 +97,27 @@ const Input = () => {
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600 text-sm sm:text-base"
-            placeholder="Years of Experience*"
+            placeholder="Years of Experience *"
             min="0"
           />
+          {errors.experience && <p className="text-red-400 text-sm mt-1">{errors.experience}</p>}
 
           <div className="space-y-2">
             <label htmlFor="resume" className="text-teal-200 font-medium block text-left text-sm sm:text-base">
-              Upload your resume*
+              Upload your resume (PDF only)*
             </label>
             <input
               id="resume"
               type="file"
-              onChange={(e) => setResume(e.target.files[0])}
+              onChange={(e) => {
+                setResume(e.target.files[0]);
+                setErrors((prev) => ({ ...prev, resume: "" }));
+              }}
               className="w-full cursor-pointer text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 
                          file:text-sm file:font-semibold file:bg-teal-600 file:text-white hover:file:bg-teal-700"
-              accept=".pdf,.doc,.docx"
+              accept=".pdf"
             />
+            {errors.resume && <p className="text-red-400 text-sm mt-1">{errors.resume}</p>}
           </div>
 
           <button

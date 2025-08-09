@@ -3,6 +3,8 @@ import Submitting from "./Submitting";
 import { useUser } from "../context/userContext";
 import SubmitSuccess from "./SubmitSucess";
 import Error from "./Error";
+import { useLocation } from "react-router-dom";
+
 import Loading from "./Loading";
 import TestAnalysis from "./TestAnalysis";
 import QuizInterface from "./QuizInterface";
@@ -11,6 +13,7 @@ const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_KEY;
 const QuestionGenerator = ({ skills }) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(15 * 60);
   const [submitting, setSubmitting] = useState(false);
@@ -25,6 +28,9 @@ const QuestionGenerator = ({ skills }) => {
       setSubmitted(true);
     }, 1000);
   };
+
+
+
 
 
   useEffect(() => {
@@ -109,6 +115,14 @@ Return the response as a valid JSON array of exactly 30 objects.
   }, [skills]);
 
  
+useEffect(() => {
+    if (location.pathname !== "/generate") {
+      setShowAnalysis(false);
+      setSubmitted(false);
+      setQuestions([])
+    }
+  }, [location]);
+
   if (error) {
   return (<Error error={error}/>
   );
@@ -143,6 +157,7 @@ if (showAnalysis) {
       if (isCorrect) skillPerformance[skill].correct += 1;
       skillPerformance[skill].total += 1;
     });
+    
   });
 
   return (
