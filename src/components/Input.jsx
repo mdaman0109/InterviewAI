@@ -54,7 +54,7 @@ const Input = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600 text-sm sm:text-base"
-            placeholder="Your Name"
+            placeholder="Your Name*"
           />
 
           <input
@@ -70,13 +70,13 @@ const Input = () => {
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600 text-sm sm:text-base"
-            placeholder="Years of Experience"
+            placeholder="Years of Experience*"
             min="0"
           />
 
           <div className="space-y-2">
             <label htmlFor="resume" className="text-teal-200 font-medium block text-left text-sm sm:text-base">
-              Upload your resume
+              Upload your resume*
             </label>
             <input
               id="resume"
