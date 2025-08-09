@@ -1,11 +1,12 @@
-// components/ResumeWatcher.js
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../context/userContext";
 import { readResumeText } from "../utils/pdfReader";
 import { extractSkills } from "../utils/skillExtractor";
+import QuestionGenerator from "./QuestionGenerator";
 
 const ResumeWatcher = () => {
   const { user, setUser } = useUser();
+  const [finalSkills, setFinalSkills] = useState([]);
 
   useEffect(() => {
     const analyzeResume = async () => {
@@ -13,7 +14,6 @@ const ResumeWatcher = () => {
 
       try {
         const resumeText = await readResumeText(user.resumeFile);
-
         const matchedSkills = await extractSkills(resumeText);
 
         const combinedSkills = Array.from(
@@ -24,8 +24,9 @@ const ResumeWatcher = () => {
           ...prev,
           skills: combinedSkills,
         }));
-        console.log("✅ combined:", combinedSkills);
 
+        setFinalSkills(combinedSkills); // Pass this to QuestionGenerator
+        console.log("✅ combined:", combinedSkills);
       } catch (error) {
         console.error("Resume analysis failed:", error);
       }
@@ -34,7 +35,13 @@ const ResumeWatcher = () => {
     analyzeResume();
   }, [user.resumeFile]);
 
-  return null;
+  return (
+    <>
+      {finalSkills.length > 0 && (
+        <QuestionGenerator skills={finalSkills} />
+      )}
+    </>
+  );
 };
 
 export default ResumeWatcher;

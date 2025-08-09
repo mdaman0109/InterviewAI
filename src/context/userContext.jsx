@@ -9,6 +9,7 @@ export const UserProvider = ({ children }) => {
     skills: [],
     experience: 0,
     resumeFile: null,
+    error: '',
   });
 
   return (

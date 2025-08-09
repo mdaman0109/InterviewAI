@@ -1,121 +1,170 @@
-// QuestionGenerator Component
-function QuestionGenerator({ resumeText, onGenerated }) {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState('');
+import { useEffect, useState } from "react";
+import Submitting from "./Submitting";
+import SubmitSuccess from "./SubmitSucess";
+import Error from "./Error";
+import Loading from "./Loading";
+import TestAnalysis from "./TestAnalysis";
+import QuizInterface from "./QuizInterface";
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_KEY;
 
-  const generateQuestions = () => {
-    setIsGenerating(true);
-    setError('');
+const QuestionGenerator = ({ skills }) => {
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(15 * 60);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [userAnswers, setUserAnswers] = useState({});
 
-    // Simulate API call with timeout
+  const handleSubmit = () => {
+    setSubmitting(true);
     setTimeout(() => {
+      setSubmitting(false);
+      setSubmitted(true);
+    }, 1000);
+  };
+
+
+  useEffect(() => {
+    if (questions.length > 0 && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (timeLeft === 0) {
+      handleSubmit();
+    }
+  }, [timeLeft, questions]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
+//qstns
+  useEffect(() => {
+    const generateQuestions = async () => {
+      if (!skills || skills.length === 0) return;
+
+      const combinedSkills = skills.join(", ");
+      const prompt = `
+You are a question generation engine.
+Generate exactly 30 multiple-choice questions (MCQs) that test knowledge of the following skills: ${combinedSkills}.
+Only include Hard and very Hard level questions.
+Each question must have:
+- "question": The question string
+- "options": An object with keys A, B, C, D
+- "answer": The correct option letter (A-D)
+- "difficulty": Either "Medium" or "Hard"
+- "skills": An array of skills the question relates to
+Return the response as a valid JSON array of exactly 30 objects.
+      `;
+
       try {
-        // Extract key skills and experience from resume text
-        const skills = extractSkills(resumeText);
-        const experience = extractExperience(resumeText);
-        
-        const questions = generateMockQuestions(skills, experience);
-        
-        if (questions.length === 0) {
-          setError('Could not generate questions from the resume content.');
-        } else {
-          onGenerated(questions);
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.5,
+          }),
+        });
+
+        const data = await res.json();
+        const content = data?.choices?.[0]?.message?.content;
+
+        if (!content) throw new Error("No content returned from OpenAI");
+
+        const cleaned = content.replace(/```json|```/g, "").trim();
+        let parsed;
+        try {
+          parsed = JSON.parse(cleaned);
+        } catch {
+          throw new Error("Invalid JSON format from OpenAI");
         }
+
+        if (!Array.isArray(parsed)) {
+          throw new Error("Expected a JSON array of questions");
+        }
+
+        setQuestions(parsed.slice(0, 25));
       } catch (err) {
-        setError('Failed to generate questions. Please try again.');
+        setError("Failed to generate questions. Please try again.");
       } finally {
-        setIsGenerating(false);
+        setLoading(false);
       }
-    }, 2000);
-  };
+    };
 
-  const extractSkills = (text) => {
-    const skillKeywords = ['javascript', 'react', 'python', 'java', 'sql', 'html', 'css', 'node', 'mongodb', 'aws', 'docker', 'git'];
-    const foundSkills = skillKeywords.filter(skill => 
-      text.toLowerCase().includes(skill.toLowerCase())
-    );
-    return foundSkills.slice(0, 5); // Limit to 5 skills
-  };
+    generateQuestions();
+  }, [skills]);
 
-  const extractExperience = (text) => {
-    const experienceKeywords = ['developer', 'engineer', 'manager', 'analyst', 'designer', 'consultant'];
-    const foundRoles = experienceKeywords.filter(role => 
-      text.toLowerCase().includes(role.toLowerCase())
-    );
-    return foundRoles.slice(0, 3); // Limit to 3 roles
-  };
-
-  const generateMockQuestions = (skills, experience) => {
-    const questionPool = [
-      {
-        question: "What is the difference between let, const, and var in JavaScript?",
-        options: ["Scope and hoisting behavior", "Memory allocation", "Execution speed", "Browser compatibility"],
-        correctAnswer: 0,
-        category: "Technical"
-      },
-      {
-        question: "Which React hook is used for managing component state?",
-        options: ["useEffect", "useState", "useContext", "useCallback"],
-        correctAnswer: 1,
-        category: "Technical"
-      },
-      {
-        question: "What is the primary purpose of version control systems like Git?",
-        options: ["Code compilation", "Track changes and collaboration", "Bug fixing", "Performance optimization"],
-        correctAnswer: 1,
-        category: "Technical"
-      },
-      {
-        question: "How do you handle conflicts in a team environment?",
-        options: ["Avoid them completely", "Listen to all perspectives and find common ground", "Always agree with the senior member", "Let the manager decide"],
-        correctAnswer: 1,
-        category: "Behavioral"
-      },
-      {
-        question: "Describe your approach to learning new technologies.",
-        options: ["Wait for formal training", "Self-study through documentation and practice", "Ask colleagues only", "Avoid new technologies"],
-        correctAnswer: 1,
-        category: "Behavioral"
-      }
-    ];
-
-    // Select questions based on skills found in resume
-    return questionPool.slice(0, Math.min(5, questionPool.length));
-  };
-
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        Generate Interview Questions
-      </h2>
-      
-      <div className="mb-4 p-4 bg-gray-50 rounded">
-        <h3 className="font-medium mb-2">Resume Summary:</h3>
-        <p className="text-sm text-gray-600 line-clamp-3">
-          {resumeText.substring(0, 200)}...
-        </p>
-      </div>
-
-      {!isGenerating && (
-        <button
-          onClick={generateQuestions}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
-        >
-          Generate Questions
-        </button>
-      )}
-
-      {isGenerating && (
-        <div className="flex items-center justify-center py-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-2"></div>
-          <span>Generating personalized questions...</span>
-        </div>
-      )}
-
-      {error && (
-        <p className="mt-2 text-red-600 text-sm">⚠ {error}</p>
-      )}
-    </div>
+ 
+  if (error) {
+  return (<Error/>
   );
 }
+
+
+
+  if (loading) {
+    return (
+      <Loading/>
+    );
+  }
+
+ 
+  if (submitting) {
+    return (<Submitting/>
+    );
+  }
+
+  if (submitted && !showAnalysis) {
+    return <SubmitSuccess setShowAnalysis={setShowAnalysis} />;
+    
+  }
+
+
+if (showAnalysis) {
+  const skillPerformance = {};
+  questions.forEach((q, idx) => {
+    const isCorrect = userAnswers[idx] === q.answer;
+    q.skills.forEach((skill) => {
+      if (!skillPerformance[skill]) skillPerformance[skill] = { correct: 0, total: 0 };
+      if (isCorrect) skillPerformance[skill].correct += 1;
+      skillPerformance[skill].total += 1;
+    });
+  });
+
+  return (
+     <TestAnalysis
+      skillPerformance={skillPerformance}
+      questions={questions}
+      userAnswers={userAnswers}
+    />
+  );
+}
+
+
+return (
+  <QuizInterface
+      questions={questions}
+      userAnswers={userAnswers}
+      setUserAnswers={setUserAnswers}
+      timeLeft={timeLeft}
+      formatTime={formatTime}
+      handleSubmit={handleSubmit}
+    />
+    
+);
+};
+
 export default QuestionGenerator;

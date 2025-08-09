@@ -1,14 +1,21 @@
-import Home from "./components/Home"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
 import ResumeWatcher from "./components/ResumeWatcher";
+import QuestionGenerator from "./components/QuestionGenerator";
 import { UserProvider } from "./context/userContext";
-function App() {
-  return(
 
+function App() {
+  return (
     <UserProvider>
-      <Home/>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/generate" element={<QuestionGenerator />} />
+        </Routes>
+      </Router>
       <ResumeWatcher />
     </UserProvider>
-)
+  );
 }
 
 export default App;
