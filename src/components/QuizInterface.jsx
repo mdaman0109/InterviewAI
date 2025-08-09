@@ -1,3 +1,4 @@
+import { useUser } from "../context/userContext";
 
 const QuizInterface = ({
   questions,
@@ -7,19 +8,22 @@ const QuizInterface = ({
   formatTime,
   handleSubmit,
 }) => {
+  const {user}= useUser()
   if (questions.length === 0) return null;
 
   return (
-    <div className="p-6 bg-slate-900 min-h-screen text-white flex flex-col items-center">
-      <div className="flex justify-between items-center w-full max-w-4xl mb-6">
-        <h2 className="text-xl font-bold text-teal-400">🧠 Generated Questions</h2>
-        <div className="flex items-center space-x-4">
-          <span className="text-red-400 font-semibold text-lg">
+    <div className="p-4 sm:p-6 bg-slate-900 min-h-screen text-white flex flex-col items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-center w-full max-w-4xl mb-6 gap-4 sm:gap-0">
+        <h2 className="text-lg sm:text-xl font-bold text-teal-400 text-center sm:text-left">
+          Welcome {user.username}, All the best! 😀
+        </h2>
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          <span className="text-red-400 font-semibold text-base sm:text-lg">
             ⏳ {formatTime(timeLeft)}
           </span>
           <button
             onClick={handleSubmit}
-            className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded shadow transition"
+            className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded shadow transition text-sm sm:text-base"
           >
             Submit Quiz
           </button>
@@ -28,8 +32,13 @@ const QuizInterface = ({
 
       <ul className="space-y-4 w-full max-w-4xl">
         {questions.map((q, index) => (
-          <li key={index} className="bg-slate-800 p-4 rounded-md shadow hover:shadow-lg transition">
-            <p className="font-semibold text-teal-300">{index + 1}. {q.question}</p>
+          <li
+            key={index}
+            className="bg-slate-800 p-4 rounded-md shadow hover:shadow-lg transition text-sm sm:text-base"
+          >
+            <p className="font-semibold text-teal-300">
+              {index + 1}. {q.question}
+            </p>
             <div className="mt-3 space-y-2">
               {Object.entries(q.options).map(([key, value]) => (
                 <label
@@ -56,10 +65,10 @@ const QuizInterface = ({
         ))}
       </ul>
 
-      <div className="mt-8">
+      <div className="mt-8 w-full max-w-4xl text-center">
         <button
           onClick={handleSubmit}
-          className="bg-teal-500 hover:bg-teal-600 text-white px-5 py-2 rounded shadow-md transition"
+          className="bg-teal-500 hover:bg-teal-600 text-white px-5 py-2 rounded shadow-md transition text-sm sm:text-base"
         >
           Submit Quiz
         </button>
