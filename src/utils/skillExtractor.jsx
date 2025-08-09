@@ -1,11 +1,11 @@
-// utils/skillExtractor.js
-import { fallbackskills } from "./fallbackskills";
+import { useUser } from "../context/userContext";
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_KEY;
 
-
 export const extractSkills = async (text) => {
+  
   try {
+    
     const prompt = `
 Extract only programming and tech-related skills from the following resume text. 
 Return them as a clean array of unique skill names. Don't include soft skills or duplicates.
@@ -33,11 +33,15 @@ ${text}
     const skills = content
       ?.match(/"([^"]+)"|'([^']+)'|`([^`]+)`|(\b[\w.+#-]+\b)/g)
       ?.map((s) => s.replace(/^["'`]|["'`]$/g, ""))
-      ?.filter((s, i, arr) => arr.indexOf(s) === i); // Unique
+      ?.filter((s, i, arr) => arr.indexOf(s) === i);
 
-    return skills?.length ? skills : fallbackSkills;
+    return skills; 
   } catch (err) {
     console.error("AI skill extraction failed, using fallback:", err);
-    return fallbackSkills;
+    const { user, setUser } = useUser();
+     setUser((prev) => ({
+    ...prev,
+    error: "AI Resume Extraction Failed! Try again🫡",
+  }));
   }
 };

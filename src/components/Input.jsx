@@ -1,6 +1,8 @@
 import { useUser } from "../context/userContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Input = () => {
+  const navigate = useNavigate();
   const { setUser } = useUser();
 
   const [name, setName] = useState("");
@@ -18,13 +20,14 @@ const Input = () => {
         experience: Number(experience),
         resumeFile: resume,
     });
+    navigate("/generate");
     };
 
 
 
 
   return (
-    <div className="bg-gradient-to-br from-slate-900 to-slate-800 pt-20 p-8 font-sans">
+    <div className="bg-gradient-to-br from-slate-900 to-slate-800 pt-20 -mb-[5vh] pb-20 font-sans">
       <header className="text-center">
         <h1 className="text-4xl font-extrabold text-teal-300 drop-shadow-md">
           Interview<span className="text-teal-500">AI</span>
