@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.11.0",
+    "firebase": "^12.1.0",
     "openai": "^5.11.0",
     "pdfjs-dist": "^5.4.54",
     "react": "^19.1.0",

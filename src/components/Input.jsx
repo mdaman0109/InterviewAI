@@ -1,11 +1,12 @@
 import { useUser } from "../context/userContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 const Input = () => {
   const navigate = useNavigate();
   const { setUser } = useUser();
-
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [skills, setSkills] = useState("");
   const [experience, setExperience] = useState("");
@@ -21,8 +22,15 @@ const Input = () => {
       experience: Number(experience),
       resumeFile: resume,
     });
+    setLoading(true)
     navigate("/generate");
   };
+
+  if (loading) {
+    return (
+      <Loading/>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-br from-slate-900 to-slate-800 pt-16 pb-20 font-sans px-4 sm:px-6">
@@ -46,7 +54,7 @@ const Input = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600 text-sm sm:text-base"
-            placeholder="Your Name"
+            placeholder="Your Name*"
           />
 
           <input
@@ -62,13 +70,13 @@ const Input = () => {
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
             className="w-full h-12 px-4 rounded-md border border-teal-500 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-600 text-sm sm:text-base"
-            placeholder="Years of Experience"
+            placeholder="Years of Experience*"
             min="0"
           />
 
           <div className="space-y-2">
             <label htmlFor="resume" className="text-teal-200 font-medium block text-left text-sm sm:text-base">
-              Upload your resume
+              Upload your resume*
             </label>
             <input
               id="resume"
