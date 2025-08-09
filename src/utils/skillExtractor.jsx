@@ -9,6 +9,7 @@ export const extractSkills = async (text) => {
     const prompt = `
 Extract only programming and tech-related skills from the following resume text. 
 Return them as a clean array of unique skill names. Don't include soft skills or duplicates.
+AND it seems irrelevant document don't extract.
 
 Resume Text:
 ${text}
