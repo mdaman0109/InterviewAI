@@ -1,4 +1,4 @@
-[Try it here](https://interviewaiapx.web.app)
+Try it here: [InterviewAI](https://interviewaiapx.web.app)
 
 📦 Installation
 # Clone the repo
